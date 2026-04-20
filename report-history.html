@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SWMS - รายงานและประวัติ</title>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;600;700&family=Prompt:wght@300;400;500;600&family=Sarabun:wght@300;400;600;700&display=swap"
+        rel="stylesheet">
+
+    <style>
+        :root {
+            --bg: #f4f6fb;
+            --card: #ffffff;
+            --text: #1e2d42;
+            --muted: #6b7a90;
+            --primary: #1b3a6b;
+            --secondary: #2e6db4;
+            --red: #e74c3c;
+            --yellow: #f39c12;
+            --green: #2ecc71;
+            --radius: 14px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Sarabun', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+        }
+
+        .app {
+            display: flex;
+            height: 100vh;
+        }
+
+        /* SIDEBAR */
+        .sidebar {
+            width: 260px;
+            background: #fff;
+            border-right: 1px solid #eaeef5;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .logo {
+            font-family: 'Kanit', sans-serif;
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 30px;
+            color: var(--primary);
+        }
+
+        .menu div {
+            padding: 12px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-family: 'Prompt', sans-serif;
+            margin-bottom: 5px;
+            transition: 0.3s;
+        }
+
+        .menu div:hover,
+        .menu div.active {
+            background: #eef4ff;
+            color: var(--secondary);
+            font-weight: 600;
+        }
+
+        .user {
+            margin-top: auto;
+            font-size: 12px;
+            color: var(--muted);
+            padding: 10px;
+            border-top: 1px solid #eee;
+        }
+
+        .logout {
+            margin-top: 10px;
+            background: var(--primary);
+            color: #fff;
+            border: none;
+            padding: 12px;
+            border-radius: 10px;
+            cursor: pointer;
+            width: 100%;
+            font-family: 'Prompt', sans-serif;
+        }
+
+        /* MAIN */
+        .main {
+            flex: 1;
+            padding: 30px;
+            overflow: auto;
+        }
+
+        h1 {
+            font-family: 'Kanit', sans-serif;
+            font-size: 26px;
+        }
+
+        .sub {
+            color: var(--muted);
+            font-size: 14px;
+            margin-bottom: 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* BUTTON EXPORT */
+        .btn-export {
+            background: #1e8449;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: 'Prompt', sans-serif;
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: 0.2s;
+        }
+
+        .btn-export:hover {
+            background: #186a3b;
+        }
+
+        /* KPI STATS */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+
+        .stat-card {
+            background: #fff;
+            padding: 20px;
+            border-radius: var(--radius);
+            border: 1px solid #e0e6ed;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .stat-info .label {
+            font-size: 13px;
+            color: var(--muted);
+            font-family: 'Prompt', sans-serif;
+            margin-bottom: 5px;
+        }
+
+        .stat-info .value {
+            font-size: 28px;
+            font-weight: 700;
+            font-family: 'Kanit', sans-serif;
+            color: var(--primary);
+        }
+
+        .stat-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            background: #eaf2ff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+
+        /* TABLE */
+        .table-container {
+            background: #fff;
+            border-radius: var(--radius);
+            overflow: hidden;
+            border: 1px solid #eee;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.02);
+        }
+
+        .table-header {
+            padding: 20px;
+            border-bottom: 1px solid #eee;
+            font-family: 'Kanit', sans-serif;
+            font-size: 16px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            padding: 15px 20px;
+            font-size: 13px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        th {
+            background: #fafbfc;
+            text-align: left;
+            color: var(--muted);
+            font-family: 'Prompt', sans-serif;
+            font-weight: 500;
+        }
+
+        .badge {
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            color: #fff;
+            font-weight: 600;
+        }
+
+        .done-badge {
+            background: #eafaf1;
+            color: #1e8449;
+            border: 1px solid #2ecc71;
+        }
+
+        .progress-badge {
+            background: #fef5e7;
+            color: #d68910;
+            border: 1px solid #f39c12;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="app">
+        <div class="sidebar">
+            <div class="logo">ผู้บริหารหน่วยงาน</div>
+            <div class="menu">
+                <div onclick="window.location.href='admin-dashboard.html'">แดชบอร์ดผู้บริหาร</div>
+                <div onclick="window.location.href='risk-control.html'">ศูนย์ควบคุมความเสี่ยง</div>
+                <div class="active">รายงานและประวัติ</div>
+            </div>
+            <div class="user" id="userDisplay"></div>
+            <button class="logout" onclick="logout()">ออกจากระบบ</button>
+        </div>
+
+        <div class="main">
+            <div class="sub">
+                <div>
+                    <h1 style="color: var(--text);">รายงานประวัติการดำเนินงาน</h1>
+                    <span>Module 5: ระบบแจ้งเตือนและประเมินความเสี่ยงเชิงปฏิบัติการอัจฉริยะ</span>
+                </div>
+                <button class="btn-export" onclick="alert('กำลังพัฒนาระบบ Export เป็น PDF/Excel')">ส่งออกรายงาน
+                    (Export)</button>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-info">
+                        <div class="label">ภารกิจที่เสร็จสิ้นแล้ว</div>
+                        <div class="value" id="completedCount">0</div>
+                    </div>
+
+                </div>
+                <div class="stat-card">
+                    <div class="stat-info">
+                        <div class="label">ภารกิจที่กำลังดำเนินการ</div>
+                        <div class="value" id="activeCount">0</div>
+                    </div>
+
+                </div>
+                <div class="stat-card">
+                    <div class="stat-info">
+                        <div class="label">อัตราความสำเร็จ (Success Rate)</div>
+                        <div class="value" id="successRate">0%</div>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="table-container">
+                <div class="table-header">
+                    <span>ประวัติภาระงานทั้งหมด (Task History Log)</span>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID อ้างอิง</th>
+                            <th>ผู้ปฏิบัติงานรับผิดชอบ</th>
+                            <th>ชื่องาน / ภารกิจ</th>
+                            <th>สถานะล่าสุด</th>
+                            <th>การประเมิน (SLA)</th>
+                        </tr>
+                    </thead>
+                    <tbody id="historyTable"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // เช็คสิทธิ์
+        const user = JSON.parse(localStorage.getItem("user") || "null");
+        if (!user || user.role !== "ผู้บริหารหน่วยงาน") window.location.href = "login.html";
+        document.getElementById("userDisplay").innerText = user.u + " | ผู้บริหาร";
+
+        // ดึงข้อมูล
+        let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
+
+        function render() {
+            // คำนวณสถิติ
+            let completed = tasks.filter(t => t.status === "เสร็จสิ้น").length;
+            let active = tasks.length - completed;
+            let rate = tasks.length > 0 ? Math.round((completed / tasks.length) * 100) : 0;
+
+            document.getElementById("completedCount").innerText = completed;
+            document.getElementById("activeCount").innerText = active;
+            document.getElementById("successRate").innerText = rate + "%";
+
+            // สร้างตาราง
+            const table = document.getElementById("historyTable");
+            let html = "";
+
+            if (tasks.length === 0) {
+                html = `<tr><td colspan="5" style="text-align: center; color: var(--muted); padding: 30px;">ยังไม่มีประวัติการปฏิบัติงานในระบบ</td></tr>`;
+            } else {
+                tasks.forEach((t, i) => {
+                    // กำหนดป้ายสถานะ
+                    let statusBadge = t.status === "เสร็จสิ้น"
+                        ? `<span class="badge done-badge">✔ สำเร็จ</span>`
+                        : `<span class="badge progress-badge">${t.status}</span>`;
+
+                    // วิเคราะห์จาก due ว่าตอนที่เสร็จ/กำลังทำ อยู่ในเกณฑ์ไหน
+                    let slaText = t.status === "เสร็จสิ้น"
+                        ? `<span style="color: var(--green); font-weight: 600;">ผ่านเกณฑ์</span>`
+                        : `<span style="color: var(--muted);">กำลังติดตาม</span>`;
+
+                    // สร้าง ID จำลองให้ดูเป็นระบบ
+                    let refId = "REQ-" + (1001 + i);
+
+                    html += `
+                    <tr>
+                        <td style="color: var(--muted); font-family: 'Prompt', sans-serif;">${refId}</td>
+                        <td><b>${t.staff}</b></td>
+                        <td>${t.taskName}</td>
+                        <td>${statusBadge}</td>
+                        <td>${slaText}</td>
+                    </tr>`;
+                });
+            }
+
+            table.innerHTML = html;
+        }
+
+        function logout() {
+            localStorage.removeItem("user");
+            window.location.href = "login.html";
+        }
+
+        render();
+    </script>
+</body>
+
+</html>
