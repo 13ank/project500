@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SWMS - แดชบอร์ดผู้บริหาร</title>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;600;700&family=Prompt:wght@300;400;500;600&family=Sarabun:wght@300;400;600;700&display=swap"
+        rel="stylesheet">
+
+    <style>
+        :root {
+            --bg: #f4f6fb;
+            --card: #ffffff;
+            --text: #1e2d42;
+            --muted: #6b7a90;
+            --primary: #1b3a6b;
+            --secondary: #2e6db4;
+            --red: #e74c3c;
+            --yellow: #f39c12;
+            --green: #2ecc71;
+            --radius: 14px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Sarabun', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+        }
+
+        .app {
+            display: flex;
+            height: 100vh;
+        }
+
+        /* SIDEBAR */
+        .sidebar {
+            width: 260px;
+            background: #fff;
+            border-right: 1px solid #eaeef5;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .logo {
+            font-family: 'Kanit', sans-serif;
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 30px;
+            color: var(--primary);
+        }
+
+        .menu div {
+            padding: 12px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-family: 'Prompt', sans-serif;
+            margin-bottom: 5px;
+            transition: 0.3s;
+        }
+
+        .menu div:hover,
+        .menu div.active {
+            background: #eef4ff;
+            color: var(--secondary);
+            font-weight: 600;
+        }
+
+        .user {
+            margin-top: auto;
+            font-size: 12px;
+            color: var(--muted);
+            padding: 10px;
+            border-top: 1px solid #eee;
+        }
+
+        .logout {
+            margin-top: 10px;
+            background: var(--primary);
+            color: #fff;
+            border: none;
+            padding: 12px;
+            border-radius: 10px;
+            cursor: pointer;
+            width: 100%;
+            font-family: 'Prompt', sans-serif;
+        }
+
+        /* MAIN */
+        .main {
+            flex: 1;
+            padding: 30px;
+            overflow: auto;
+        }
+
+        h1 {
+            font-family: 'Kanit', sans-serif;
+            font-size: 26px;
+        }
+
+        .sub {
+            color: var(--muted);
+            font-size: 14px;
+            margin-bottom: 25px;
+        }
+
+        /* KPI */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .card {
+            background: #fff;
+            padding: 18px;
+            border-radius: var(--radius);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.02);
+        }
+
+        .card-label {
+            font-size: 13px;
+            color: var(--muted);
+            font-family: 'Prompt', sans-serif;
+        }
+
+        .value {
+            font-size: 24px;
+            font-weight: 700;
+            font-family: 'Kanit', sans-serif;
+            margin-top: 5px;
+        }
+
+        /* ALERT */
+        .alert {
+            padding: 15px;
+            border-radius: 12px;
+            font-size: 14px;
+            margin-bottom: 20px;
+            font-family: 'Prompt', sans-serif;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .danger {
+            background: #fdecea;
+            color: #c0392b;
+            border-left: 5px solid var(--red);
+        }
+
+        .safe {
+            background: #eafaf1;
+            color: #1e8449;
+            border-left: 5px solid var(--green);
+        }
+
+        /* TABLE */
+        .table-container {
+            background: #fff;
+            border-radius: var(--radius);
+            overflow: hidden;
+            border: 1px solid #eee;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            padding: 15px;
+            font-size: 13px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        th {
+            background: #fafbfc;
+            text-align: left;
+            color: var(--muted);
+            font-family: 'Prompt', sans-serif;
+            font-weight: 500;
+        }
+
+        /* BADGE & BUTTONS */
+        .badge {
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            color: #fff;
+            font-weight: 600;
+        }
+
+        .high {
+            background: var(--red);
+        }
+
+        .medium {
+            background: var(--yellow);
+        }
+
+        .low {
+            background: var(--green);
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 5px;
+        }
+
+        .btn {
+            padding: 6px 12px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 11px;
+            font-family: 'Prompt', sans-serif;
+            transition: 0.2s;
+        }
+
+        .ack {
+            background: var(--secondary);
+            color: #fff;
+        }
+
+        .assign {
+            background: #8e44ad;
+            color: #fff;
+        }
+
+        .done {
+            background: var(--green);
+            color: #fff;
+        }
+
+        .btn:hover {
+            opacity: 0.8;
+            transform: translateY(-1px);
+        }
+
+        /* MODAL */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 100;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: #fff;
+            padding: 25px;
+            border-radius: var(--radius);
+            width: 400px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .modal-header {
+            font-family: 'Kanit', sans-serif;
+            font-size: 18px;
+            margin-bottom: 15px;
+        }
+
+        .staff-list {
+            margin-top: 15px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .staff-item {
+            padding: 10px;
+            border: 1px solid #eee;
+            margin-bottom: 5px;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            font-size: 13px;
+        }
+
+        .staff-item:hover {
+            background: #f0f7ff;
+            border-color: var(--secondary);
+        }
+
+        .staff-item .load {
+            font-weight: 700;
+            color: var(--secondary);
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="app">
+        <div class="sidebar">
+            <div class="logo">ผู้บริหารหน่วยงาน</div>
+            <div class="menu">
+                <div class="active">แดชบอร์ดผู้บริหาร</div>
+                <div onclick="window.location.href='risk-control.html'">ศูนย์ควบคุมความเสี่ยง</div>
+                <div onclick="window.location.href='report-history.html'">รายงานและประวัติ</div>
+            </div>
+            <div class="user" id="userDisplay"></div>
+            <button class="logout" onclick="logout()">ออกจากระบบ</button>
+        </div>
+
+        <div class="main">
+            <h1>แดชบอร์ดสรุปภาพรวม (Executive Dashboard)</h1>
+            <div class="sub">Module 5: ระบบแจ้งเตือนและประเมินความเสี่ยงเชิงปฏิบัติการอัจฉริยะ</div>
+
+            <div class="grid">
+                <div class="card">
+                    <div class="card-label">งานทั้งหมด</div>
+                    <div class="value" id="total">0</div>
+                </div>
+                <div class="card" style="border-bottom: 4px solid var(--red);">
+                    <div class="card-label">ความเสี่ยงสูง</div>
+                    <div class="value" style="color: var(--red);" id="high">0</div>
+                </div>
+                <div class="card" style="border-bottom: 4px solid var(--yellow);">
+                    <div class="card-label">ความเสี่ยงปานกลาง</div>
+                    <div class="value" style="color: var(--yellow);" id="medium">0</div>
+                </div>
+                <div class="card">
+                    <div class="card-label">สถานะระบบ</div>
+                    <div class="value" id="status">ปกติ</div>
+                </div>
+            </div>
+
+            <div class="alert" id="alertBox"></div>
+
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ผู้ปฏิบัติงาน</th>
+                            <th>ชื่องานภารกิจ</th>
+                            <th>ระดับความเสี่ยง</th>
+                            <th>สถานะปัจจุบัน</th>
+                            <th>การดำเนินการทางบริหาร</th>
+                        </tr>
+                    </thead>
+                    <tbody id="table"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div id="assignModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">เลือกบุคลากรเพื่อมอบหมายงาน</div>
+            <p style="font-size: 12px; color: var(--muted);">เลือกผู้ที่มีภาระงาน (Workload) ต่ำเพื่อลดความเสี่ยง</p>
+            <div class="staff-list" id="staffList"></div>
+            <button class="btn" style="width: 100%; margin-top: 15px; background: #eee;"
+                onclick="closeModal()">ยกเลิก</button>
+        </div>
+    </div>
+
+    <script>
+        // เช็คสิทธิ์
+        const user = JSON.parse(localStorage.getItem("user") || "null");
+        if (!user || user.role !== "ผู้บริหารหน่วยงาน") window.location.href = "login.html";
+        document.getElementById("userDisplay").innerText = user.u + " | ผู้บริหาร";
+
+        // รายชื่อบุคลากรจำลอง
+        const staffList = [
+            { id: "staff001", name: "สมชาย สายลุย", load: "85%" },
+            { id: "staff002", name: "วิภาวดี มีงาน", load: "40%" },
+            { id: "staff003", name: "ธนพล ทนงาน", load: "10%" },
+            { id: "staff004", name: "นภา รื่นรมย์", load: "25%" }
+        ];
+
+        let currentAssignIndex = null;
+
+        // ดึงข้อมูล SLA (แต่ไม่ต้องมีฟังก์ชันอัปเดต เพราะถูกย้ายไปหน้า Risk Control แล้ว)
+        let settings = JSON.parse(localStorage.getItem("swms_settings")) || { high: 0, med: 2 };
+        // ชุดข้อมูลจำลอง (Mock Data) แบบจัดเต็ม
+        const defaultTasks = [
+            { staff: "staff001", taskName: "รายงานงบประมาณไตรมาส 1", due: 0, status: "รอดำเนินการ" },
+            { staff: "staff002", taskName: "อัปเดตระบบฐานข้อมูลบุคลากร", due: 1, status: "กำลังดำเนินการ" },
+            { staff: "staff003", taskName: "สรุปรายงานการประชุมผู้บริหาร", due: 3, status: "รับทราบแล้ว" },
+            { staff: "staff004", taskName: "ซ่อมแซมระบบเครือข่าย", due: -1, status: "กำลังดำเนินการ" },
+            { staff: "staff001", taskName: "จัดเตรียมเอกสารประเมินคุณภาพ", due: 2, status: "รับทราบแล้ว" },
+            { staff: "staff002", taskName: "อบรมการใช้งานระบบใหม่", due: 99, status: "เสร็จสิ้น" }
+        ];
+
+        let tasks = JSON.parse(localStorage.getItem("tasks"));
+        // ถ้าไม่มีข้อมูลในระบบ ให้ดึงข้อมูลจำลองมาใช้
+        if (!tasks || tasks.length === 0) {
+            tasks = defaultTasks;
+            localStorage.setItem("tasks", JSON.stringify(tasks));
+        }
+
+        function getRisk(t) {
+            if (t.status === "เสร็จสิ้น") return "low";
+            if (t.due <= settings.high) return "high";
+            if (t.due <= settings.med) return "medium";
+            return "low";
+        }
+
+        function render() {
+            const table = document.getElementById("table");
+            let highCount = tasks.filter(t => getRisk(t) === "high").length;
+            let medCount = tasks.filter(t => getRisk(t) === "medium").length;
+
+            document.getElementById("total").innerText = tasks.length;
+            document.getElementById("high").innerText = highCount;
+            document.getElementById("medium").innerText = medCount;
+
+            const alertBox = document.getElementById("alertBox");
+            if (highCount > 0) {
+                alertBox.className = "alert danger";
+                alertBox.innerHTML = "🔴 <b>ตรวจพบวิกฤตความเสี่ยง:</b> มีงาน " + highCount + " รายการที่เกินกำหนด หรือสามารถจัดการได้ที่หน้าศูนย์ควบคุมความเสี่ยง";
+                document.getElementById("status").innerText = "วิกฤต";
+                document.getElementById("status").style.color = "var(--red)";
+            } else {
+                alertBox.className = "alert safe";
+                alertBox.innerHTML = "🟢 <b>สถานะการดำเนินงานปกติ:</b> ไม่พบความเสี่ยงระดับสูงในขณะนี้";
+                document.getElementById("status").innerText = "ปกติ";
+                document.getElementById("status").style.color = "var(--green)";
+            }
+
+            let html = "";
+            tasks.forEach((t, i) => {
+                let r = getRisk(t);
+                let riskText = r === "high" ? "สูง (วิกฤต)" : r === "medium" ? "ปานกลาง" : "ต่ำ";
+
+                html += `
+                <tr>
+                    <td><b>${t.staff}</b></td>
+                    <td>${t.taskName}</td>
+                    <td><span class="badge ${r}">${riskText}</span></td>
+                    <td>${t.status}</td>
+                    <td class="btn-group">
+                        <button class="btn ack" onclick="updateStatus(${i}, 'รับทราบแล้ว')">รับทราบ</button>
+                        <button class="btn assign" onclick="openAssignModal(${i})">มอบหมายใหม่</button>
+                        <button class="btn done" onclick="updateStatus(${i}, 'เสร็จสิ้น')">ปิดความเสี่ยง</button>
+                    </td>
+                </tr>`;
+            });
+            table.innerHTML = html;
+        }
+
+        function updateStatus(i, status) {
+            tasks[i].status = status;
+            if (status === 'เสร็จสิ้น') tasks[i].due = 99;
+            saveAndRender();
+        }
+
+        function openAssignModal(index) {
+            currentAssignIndex = index;
+            const listDiv = document.getElementById("staffList");
+            listDiv.innerHTML = staffList.map(s => `
+                <div class="staff-item" onclick="confirmAssign('${s.id}')">
+                    <span>${s.name}</span>
+                    <span class="load">Workload: ${s.load}</span>
+                </div>
+            `).join("");
+            document.getElementById("assignModal").style.display = "flex";
+        }
+
+        function confirmAssign(staffId) {
+            tasks[currentAssignIndex].staff = staffId;
+            tasks[currentAssignIndex].status = "โอนย้ายงาน/มอบหมายใหม่";
+            closeModal();
+            saveAndRender();
+            alert("โอนย้ายภารกิจไปยัง " + staffId + " เรียบร้อยแล้ว");
+        }
+
+        function closeModal() {
+            document.getElementById("assignModal").style.display = "none";
+        }
+
+        function saveAndRender() {
+            localStorage.setItem("tasks", JSON.stringify(tasks));
+            render();
+        }
+
+        function logout() {
+            localStorage.removeItem("user");
+            window.location.href = "login.html";
+        }
+
+        // โหลดข้อมูลทุกครั้งที่เปิดหน้า เผื่อมีการแก้ SLA จากหน้า Risk Control
+        window.onload = () => {
+            settings = JSON.parse(localStorage.getItem("swms_settings")) || { high: 0, med: 2 };
+            tasks = JSON.parse(localStorage.getItem("tasks")) || [];
+            render();
+        };
+    </script>
+</body>
+
+</html>
